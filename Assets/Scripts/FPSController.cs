@@ -12,8 +12,8 @@ public class FPSController : MonoBehaviour
     public float gravity = 10f;
  
  
-    public float lookSpeed = 2f;
-    public float lookXLimit = 45f;
+    public float lookSpeed = 0.001f;
+    public float lookXLimit = 25f;
  
  
     Vector3 moveDirection = Vector3.zero;
@@ -56,10 +56,10 @@ public class FPSController : MonoBehaviour
             moveDirection.y = movementDirectionY;
         }
  
-        if (!characterController.isGrounded)
-        {
-            moveDirection.y -= gravity * Time.deltaTime;
-        }
+        // if (!characterController.isGrounded)
+        // {
+        //     moveDirection.y -= gravity * Time.deltaTime;
+        // }
  
         #endregion
  
@@ -68,10 +68,10 @@ public class FPSController : MonoBehaviour
  
         if (canMove)
         {
-            rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
+            rotationX += Input.GetAxis("Mouse Y") * lookSpeed;
             rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
             playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
+            transform.rotation *= Quaternion.Euler(0, -Input.GetAxis("Mouse X") * lookSpeed, 0);
         }
  
         #endregion
