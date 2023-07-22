@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Android;
+using TMPro;
+using System;
 
 public class ControlPanel : MonoBehaviour
 {
@@ -12,6 +14,9 @@ public class ControlPanel : MonoBehaviour
     public GameObject btnSinhala;
     public GameObject btnMic;
     public GameObject btnCamera;
+
+    [Header("TextMeshProUGUI")]
+    public TextMeshProUGUI debugLog;
 
     private string processingMode = "english"; // "english" , "sinhala", "camera"
 
@@ -43,11 +48,13 @@ public class ControlPanel : MonoBehaviour
     public void english(){
         sinhalaSingView.SetActive(false);
         Debug.Log("english");
+          debugLog.text = "english";
      }
 
     public void sinhala() {
         sinhalaSingView.SetActive(true);
         Debug.Log("sinhala");
+         debugLog.text = "sinhala";
     }
 
 
@@ -76,6 +83,7 @@ public class ControlPanel : MonoBehaviour
         // Update the output text with the recognized speech
         //outputText.text = result;
          Debug.LogError(result);
+         debugLog.text = result;
     }
 
     private void OnDestroy()
