@@ -5,8 +5,7 @@ using PolyAndCode.UI;
 
 public struct ContactInfo1
 {
-    public string UserName;
-    public long profPicID;
+    public string signImage;
 }
 
 public class SinhalaSign : MonoBehaviour, IRecyclableScrollRectDataSource
@@ -28,7 +27,7 @@ public class SinhalaSign : MonoBehaviour, IRecyclableScrollRectDataSource
         for(int i = 0; i<10; i++)
         {
             ContactInfo1 obj = new ContactInfo1();
-            obj.UserName = "hashan " + i;
+            obj.signImage = "" + i;
             contactList.Add(obj);
         }
         recyclableScrollRect.show();

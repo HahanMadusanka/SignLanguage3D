@@ -29,8 +29,8 @@ public class DemoCell1 : MonoBehaviour, ICell
         _cellIndex = cellIndex;
         this.contactInfo = contactInfo;
 
-        UserName.text = contactInfo.UserName;
-//        image.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/ProfPics/" + contactInfo.profPicID.ToString());
+        UserName.text = contactInfo.signImage;
+        image.GetComponent<Image>().sprite = Resources.Load<Sprite>("SinhalaSign/" + contactInfo.signImage);
 
     }
 
