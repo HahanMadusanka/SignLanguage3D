@@ -9,6 +9,8 @@ using System;
 
 public class ControlPanel : MonoBehaviour
 {
+    public Animator mAnimator;
+
     [Header("GameObject")]
     public GameObject sinhalaSingView;
     public GameObject btnEnglish;
@@ -34,11 +36,32 @@ public class ControlPanel : MonoBehaviour
         CheckPermission();
 #endif
 
+       // mAnimator = GetComponent<Animator>();
+
+        if (mAnimator != null)
+        {
+            mAnimator.SetTrigger("TrIdeal");
+        }
+        else
+        {
+            Debug.Log("mAnimator null");
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+
+            // if (Input.GetKeyDown(KeyCode.0))
+
+
+
+
+            //if (Input.GetKeyDown(KeyCode.r))
+            //{
+            //  mAnimator.SetTrigger("TrIdealR");
+            //}
+        
         
     }
 
