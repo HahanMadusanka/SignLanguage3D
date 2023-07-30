@@ -1113,6 +1113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4d3f65cfc99a4d41b22fce946445e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mAnimator: {fileID: 1508448707}
   sinhalaSingView: {fileID: 1350687193}
   btnEnglish: {fileID: 1014746138}
   btnSinhala: {fileID: 195002190}
