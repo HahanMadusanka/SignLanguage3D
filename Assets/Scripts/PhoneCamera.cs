@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PhoneCamera : MonoBehaviour
 {
-
+    public GameObject cameraScreen;
     private bool CamAvailable;
     private WebCamTexture backCam;
     private Texture defaultBackground;
@@ -16,16 +16,30 @@ public class PhoneCamera : MonoBehaviour
     void Start()
     {
         defaultBackground = background.texture;
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+ 
+    }
+
+
+    public void openCamera()
+    {
+        cameraScreen.SetActive(true);
+
         WebCamDevice[] devices = WebCamTexture.devices;
 
-        if(devices.Length == 0)
+        if (devices.Length == 0)
         {
             Debug.Log("No camera .");
             CamAvailable = false;
             return;
         }
 
-        for(int i = 0; i <devices.Length; i++)
+        for (int i = 0; i < devices.Length; i++)
         {
             if (devices[i].isFrontFacing)
             {
@@ -34,7 +48,7 @@ public class PhoneCamera : MonoBehaviour
             }
         }
 
-        if(backCam == null)
+        if (backCam == null)
         {
             Debug.Log("No back camera .");
             return;
@@ -48,15 +62,17 @@ public class PhoneCamera : MonoBehaviour
 
         int orient = -backCam.videoRotationAngle;
         background.rectTransform.localEulerAngles = new Vector3(0, -1f, orient);
-        Debug.Log("orient = "+ orient);
+        Debug.Log("orient = " + orient);
         CamAvailable = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void closeCamera()
     {
- 
-    }
+        cameraScreen.SetActive(false);
 
-  
+        if (backCam != null && backCam.isPlaying)
+        {
+            backCam.Stop();
+        }
+    }
 }

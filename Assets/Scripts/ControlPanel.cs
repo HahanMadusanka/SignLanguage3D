@@ -18,7 +18,8 @@ public class ControlPanel : MonoBehaviour
     public GameObject btnMic;
     public GameObject btnCamera; 
     public GameObject popupVideoSelection;
-    public GameObject cameraScreen;
+    public GameObject TypingInputPopup;
+
 
     [Header("TextMeshProUGUI")]
     public TextMeshProUGUI debugLog;
@@ -121,8 +122,15 @@ public class ControlPanel : MonoBehaviour
        
     }
 
-    public void openCamera()
+    public void openType(string lnaguage)
     {
-        cameraScreen.SetActive(true);
+        TypingInputPopup.SetActive(true);
     }
+        
+    public void okType()
+    {
+        TypingInputPopup.SetActive(false);
+    }
+
+
 }
