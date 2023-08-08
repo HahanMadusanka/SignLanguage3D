@@ -42,27 +42,21 @@ public class PhoneCamera : MonoBehaviour
 
         backCam.Play();
         background.texture = backCam;
-   
 
+        float scaleY = backCam.videoVerticallyMirrored ? 1f : -1f;
+        background.rectTransform.localScale = new Vector3(5f, scaleY, 1f);
 
+        int orient = -backCam.videoRotationAngle;
+        background.rectTransform.localEulerAngles = new Vector3(0, -1f, orient);
+        Debug.Log("orient = "+ orient);
         CamAvailable = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!CamAvailable)
-        {
-            return;
-        }
-
-        float ratio = (float)backCam.width / (float)backCam.height;
-      //  fit.aspectRatio = ratio;
-
-        float scaleY = backCam.videoVerticallyMirrored ? -1f : 1f;
-        background.rectTransform.localScale = new Vector3(1f, scaleY, 1f);
-
-        int orient = -backCam.videoRotationAngle;
-        background.rectTransform.localEulerAngles = new Vector3(0, 0, orient);
+ 
     }
+
+  
 }
