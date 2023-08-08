@@ -16,7 +16,8 @@ public class ControlPanel : MonoBehaviour
     public GameObject btnEnglish;
     public GameObject btnSinhala;
     public GameObject btnMic;
-    public GameObject btnCamera;
+    public GameObject btnCamera; 
+    public GameObject popupVideoSelection;
 
     [Header("TextMeshProUGUI")]
     public TextMeshProUGUI debugLog;
@@ -105,4 +106,17 @@ public class ControlPanel : MonoBehaviour
     }
     #endregion
 
+
+    public void videoSelectionPopup()
+    {
+        if (popupVideoSelection.activeSelf)
+        {
+            popupVideoSelection.SetActive(false);
+        }
+        else
+        {
+            popupVideoSelection.SetActive(true);
+        }
+       
+    }
 }
