@@ -18,6 +18,7 @@ public class ControlPanel : MonoBehaviour
     public GameObject btnMic;
     public GameObject btnCamera; 
     public GameObject popupVideoSelection;
+    public GameObject cameraScreen;
 
     [Header("TextMeshProUGUI")]
     public TextMeshProUGUI debugLog;
@@ -118,5 +119,10 @@ public class ControlPanel : MonoBehaviour
             popupVideoSelection.SetActive(true);
         }
        
+    }
+
+    public void openCamera()
+    {
+        cameraScreen.SetActive(true);
     }
 }
