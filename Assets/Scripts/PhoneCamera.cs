@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,12 +13,14 @@ public class PhoneCamera : MonoBehaviour
     private Texture defaultBackground;
 
     public RawImage background;
- //   public AspectRatioFitter fit;
+    private string videoFilePath;
+
     // Start is called before the first frame update
     void Start()
     {
         defaultBackground = background.texture;
-        
+        videoFilePath = Path.Combine(Application.persistentDataPath, "recordedVideo.mp4");
+
     }
 
     // Update is called once per frame
@@ -75,4 +79,29 @@ public class PhoneCamera : MonoBehaviour
             frontCam.Stop();
         }
     }
+
+    public void SaveRecordedVideo()
+    {
+        if (frontCam == null || !frontCam.isPlaying)
+        {
+            Debug.Log("No video to save.");
+            return;
+        }
+
+        // Convert WebCamTexture to a Texture2D
+        Texture2D videoTexture = new Texture2D(frontCam.width, frontCam.height);
+        videoTexture.SetPixels(frontCam.GetPixels());
+        videoTexture.Apply();
+
+        // Encode the video to bytes (MP4 format)
+        byte[] videoBytes = videoTexture.EncodeToJPG();
+
+        // Save video to the persistent data path
+        string savePath = Path.Combine(Application.persistentDataPath, "recordedVideo.mp4");
+        File.WriteAllBytes(savePath, videoBytes);
+        Debug.Log("Video saved to: " + savePath);
+
+    }
+
+
 }
