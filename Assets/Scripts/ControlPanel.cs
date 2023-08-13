@@ -30,6 +30,7 @@ public class ControlPanel : MonoBehaviour
     private const string EnglishLanguageCode = "en-US";
     private const string SinhalaLanguageCode = "si-LK";
 
+    private string FilePath;
 
     void Start()
     {
@@ -132,5 +133,21 @@ public class ControlPanel : MonoBehaviour
         TypingInputPopup.SetActive(false);
     }
 
+    public void LoadFile()
+    {
+        string FileType = NativeFilePicker.ConvertExtensionToFileType("mp4");
 
+        NativeFilePicker.Permission permission = NativeFilePicker.PickFile((path) =>
+        {
+            if (path == null)
+            {
+                Debug.Log("path is null");
+            }
+            else
+            {
+                FilePath = path;
+                Debug.Log("path is "+path);
+            }
+        },new string[] { FileType});
+    }
 }
