@@ -7,7 +7,7 @@ public class PhoneCamera : MonoBehaviour
 {
     public GameObject cameraScreen;
     private bool CamAvailable;
-    private WebCamTexture backCam;
+    private WebCamTexture frontCam;
     private Texture defaultBackground;
 
     public RawImage background;
@@ -43,36 +43,36 @@ public class PhoneCamera : MonoBehaviour
         {
             if (devices[i].isFrontFacing)
             {
-                backCam = new WebCamTexture(devices[i].name, Screen.width, Screen.height);
-
+                frontCam = new WebCamTexture(devices[i].name, Screen.width, Screen.height);
             }
         }
 
-        if (backCam == null)
+        if (frontCam == null)
         {
-            Debug.Log("No back camera .");
+            Debug.Log("No front camera .");
             return;
         }
 
-        backCam.Play();
-        background.texture = backCam;
+        frontCam.Play();
+        background.texture = frontCam;
 
-        float scaleY = backCam.videoVerticallyMirrored ? 1f : -1f;
-        background.rectTransform.localScale = new Vector3(5f, scaleY, 1f);
+        background.rectTransform.localScale = new Vector3(1.32f, -0.28f, 0.28f); // Set scaleY to 1
+        background.rectTransform.sizeDelta = new Vector2(Screen.width, Screen.height); // Set size to match screen
 
-        int orient = -backCam.videoRotationAngle;
-        background.rectTransform.localEulerAngles = new Vector3(0, -1f, orient);
+        int orient = -frontCam.videoRotationAngle;
+        background.rectTransform.localEulerAngles = new Vector3(0, 0, orient);
         Debug.Log("orient = " + orient);
         CamAvailable = true;
     }
+
 
     public void closeCamera()
     {
         cameraScreen.SetActive(false);
 
-        if (backCam != null && backCam.isPlaying)
+        if (frontCam != null && frontCam.isPlaying)
         {
-            backCam.Stop();
+            frontCam.Stop();
         }
     }
 }
