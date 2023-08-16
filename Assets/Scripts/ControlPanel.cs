@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Android;
+using UnityEngine.Networking;
 using TextSpeech;
 using TMPro;
 using System;
@@ -31,6 +32,8 @@ public class ControlPanel : MonoBehaviour
     private const string SinhalaLanguageCode = "si-LK";
 
     private string FilePath;
+
+    private string URL = "http://4368-123-231-127-112.ngrok.io/predict/en";
 
     void Start()
     {
@@ -131,6 +134,7 @@ public class ControlPanel : MonoBehaviour
     public void okType()
     {
         TypingInputPopup.SetActive(false);
+        StartCoroutine(getData());
     }
 
     public void LoadFile()
@@ -150,4 +154,65 @@ public class ControlPanel : MonoBehaviour
             }
         },new string[] { FileType});
     }
+
+    #region API call
+    IEnumerator getData()
+    {/*
+        using(UnityWebRequest request = UnityWebRequest.Get(URL))
+        {
+            yield return request.SendWebRequest();
+
+            if(request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                debugLog.text = "Error = " + request.error;
+            }
+            else
+            {
+                string json = request.downloadHandler.text;
+            //    SimpleJSON.JSONNode stats = SimpleJSON.JSON.Parse(json);
+
+              //  debugLog.text = " result " + stats[0]["result"];
+            }
+        }*/
+
+        string jsonPayload = "{\"sentence\":\"mother come\"}";
+
+
+        using (UnityWebRequest request = new UnityWebRequest(URL, "POST"))
+        {
+            byte[] jsonBytes = System.Text.Encoding.UTF8.GetBytes(jsonPayload);
+            request.uploadHandler = new UploadHandlerRaw(jsonBytes);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                debugLog.text = "Error = " + request.error;
+            }
+            else
+            {
+                string json = request.downloadHandler.text;
+                SimpleJSON.JSONNode stats = SimpleJSON.JSON.Parse(json);
+                Debug.Log("stats " + json);
+                Debug.Log("json " + json);
+                Dictionary<string, List<string>> data = JsonUtility.FromJson<Dictionary<string, List<string>>>(json);
+                Debug.Log("1 " + data);
+            /*
+                    string[] resultArray = stats["result"];
+                    Debug.Log("2 " + resultValues);
+                    // Convert list to array if needed
+                    //string[] resultArray = resultValues.ToArray();
+                    Debug.Log("3 " + resultArray);
+                    // Now you can use the values in resultArray
+                    foreach (string value in resultArray)
+                    {
+                        Debug.Log("Value: " + value);
+                    }*/
+             }
+            
+        }
+    }
+    #endregion
 }
