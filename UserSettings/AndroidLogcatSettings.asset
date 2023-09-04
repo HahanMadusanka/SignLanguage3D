@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "R58R102JS3A",
         "name": "com.DefaultCompany.SignLanguage3D",
-        "processId": 21227,
+        "processId": 8012,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -12,6 +12,108 @@
             "deviceId": "R58R102JS3A",
             "name": "com.DefaultCompany.SignLanguage3D",
             "processId": 21227,
+            "exited": false
+        },
+        {
+            "deviceId": "R58R102JS3A",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 26260,
+            "exited": false
+        },
+        {
+            "deviceId": "R58R102JS3A",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 32320,
+            "exited": false
+        },
+        {
+            "deviceId": "R58R102JS3A",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 5058,
+            "exited": false
+        },
+        {
+            "deviceId": "R58R102JS3A",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 15438,
+            "exited": false
+        },
+        {
+            "deviceId": "R58R102JS3A",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 18205,
+            "exited": false
+        },
+        {
+            "deviceId": "R58R102JS3A",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 20316,
+            "exited": false
+        },
+        {
+            "deviceId": "R58R102JS3A",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 8012,
+            "exited": false
+        },
+        {
+            "deviceId": "a3df4d71e4d3",
+            "name": "com.google.android.googlequicksearchbox:search",
+            "processId": 3960,
+            "exited": false
+        },
+        {
+            "deviceId": "a3df4d71e4d3",
+            "name": "com.android.settings",
+            "processId": 20004,
+            "exited": true
+        },
+        {
+            "deviceId": "a3df4d71e4d3",
+            "name": "com.android.settings",
+            "processId": 23275,
+            "exited": false
+        },
+        {
+            "deviceId": "a3df4d71e4d3",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 23002,
+            "exited": false
+        },
+        {
+            "deviceId": "a3df4d71e4d3",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 25568,
+            "exited": false
+        },
+        {
+            "deviceId": "a3df4d71e4d3",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 26636,
+            "exited": false
+        },
+        {
+            "deviceId": "a3df4d71e4d3",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 27375,
+            "exited": false
+        },
+        {
+            "deviceId": "a3df4d71e4d3",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 6965,
+            "exited": false
+        },
+        {
+            "deviceId": "a3df4d71e4d3",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 13502,
+            "exited": false
+        },
+        {
+            "deviceId": "a3df4d71e4d3",
+            "name": "com.DefaultCompany.SignLanguage3D",
+            "processId": 16385,
             "exited": false
         }
     ],

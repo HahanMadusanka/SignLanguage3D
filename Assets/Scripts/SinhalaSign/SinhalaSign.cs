@@ -23,14 +23,14 @@ public class SinhalaSign : MonoBehaviour, IRecyclableScrollRectDataSource
 
     // Start is called before the first frame update
     void Start()
-    {
+    {/*
         for(int i = 0; i<10; i++)
         {
             ContactInfo1 obj = new ContactInfo1();
             obj.signImage = "" + i;
             contactList.Add(obj);
         }
-        recyclableScrollRect.show();
+        recyclableScrollRect.show();*/
     }
 
     // Update is called once per frame
@@ -52,4 +52,19 @@ public class SinhalaSign : MonoBehaviour, IRecyclableScrollRectDataSource
         item.ConfigureCell1(contactList[index], index);
     }
     #endregion
+
+    public void showSinhalaSign(string[] result)
+    {
+        contactList.Clear();
+        foreach (string value in result)
+        {
+            Debug.Log("Value: " + value.Replace(".png",""));
+
+            ContactInfo1 obj = new ContactInfo1();
+            obj.signImage = value.Replace(".png", "");
+            contactList.Add(obj);
+        }
+        recyclableScrollRect.show();
+      
+    }
 }

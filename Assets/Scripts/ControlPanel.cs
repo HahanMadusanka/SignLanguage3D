@@ -1,5 +1,6 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Android;
@@ -7,6 +8,18 @@ using UnityEngine.Networking;
 using TextSpeech;
 using TMPro;
 using System;
+using System.IO;
+
+[System.Serializable]
+public class JSONData
+{
+    public string[] result;
+}
+
+public class JSONDataVideo
+{
+    public string result;
+}
 
 public class ControlPanel : MonoBehaviour
 {
@@ -16,14 +29,20 @@ public class ControlPanel : MonoBehaviour
     public GameObject sinhalaSingView;
     public GameObject btnEnglish;
     public GameObject btnSinhala;
-    public GameObject btnMic;
-    public GameObject btnCamera; 
+  
     public GameObject popupVideoSelection;
     public GameObject TypingInputPopup;
-
+    public GameObject ShowTextPopup;
+    public GameObject SettingsPopup;
 
     [Header("TextMeshProUGUI")]
     public TextMeshProUGUI debugLog;
+    public TextMeshProUGUI ShowTextPopupText;
+
+    [Header("TMP_InputField")]
+    public TMP_InputField inputTextEnglish;
+    public TMP_InputField inputTextSinhala;
+    public TMP_InputField urlText;
 
     private string processingMode = "english"; // "english" , "sinhala", "camera"
 
@@ -33,7 +52,7 @@ public class ControlPanel : MonoBehaviour
 
     private string FilePath;
 
-    private string URL = "http://4368-123-231-127-112.ngrok.io/predict/en";
+    private string URL = "http://b87e-2407-c00-c003-b66f-c1fd-e253-9747-3f38.ngrok.io";
 
     void Start()
     {
@@ -43,39 +62,25 @@ public class ControlPanel : MonoBehaviour
         CheckPermission();
 #endif
 
-       // mAnimator = GetComponent<Animator>();
-
-        if (mAnimator != null)
-        {
-            mAnimator.SetTrigger("TrIdeal");
-        }
-        else
-        {
-            Debug.Log("mAnimator null");
-        }
     }
 
     // Update is called once per frame
     void Update()
-    {
-
-            // if (Input.GetKeyDown(KeyCode.0))
-
-
-
-
-            //if (Input.GetKeyDown(KeyCode.r))
-            //{
-            //  mAnimator.SetTrigger("TrIdealR");
-            //}
-        
+    {        
         
     }
+
 
     public void english(){
         processingMode = "english";
         sinhalaSingView.SetActive(false);
-        Debug.Log("english");
+        popupVideoSelection.SetActive(false);
+
+        if (TypingInputPopup.activeSelf)
+        {
+            TypingInputPopup.SetActive(false);
+            inputTextEnglish.text = "";
+        }
 
         StartListening(EnglishLanguageCode);
      }
@@ -83,7 +88,13 @@ public class ControlPanel : MonoBehaviour
     public void sinhala() {
         processingMode = "sinhala";
         sinhalaSingView.SetActive(true);
-        Debug.Log("sinhala");
+        popupVideoSelection.SetActive(false);
+
+        if (TypingInputPopup.activeSelf)
+        {
+            TypingInputPopup.SetActive(false);
+            inputTextSinhala.text = "";
+        }
 
         StartListening(SinhalaLanguageCode);
     }
@@ -108,6 +119,14 @@ public class ControlPanel : MonoBehaviour
 
     void OnFinalSpeechResult(string result)
     {
+        if (processingMode == "sinhala")
+        {
+            StartCoroutine(getSinhalaData(result));
+        }
+        else
+        {
+            StartCoroutine(getEnglishData(result));
+        }
         debugLog.text = result;
     }
     #endregion
@@ -122,19 +141,58 @@ public class ControlPanel : MonoBehaviour
         else
         {
             popupVideoSelection.SetActive(true);
+            TypingInputPopup.SetActive(false);
         }
        
     }
 
     public void openType(string lnaguage)
     {
-        TypingInputPopup.SetActive(true);
+        popupVideoSelection.SetActive(false);
+
+        if (TypingInputPopup.activeSelf)
+        {
+            TypingInputPopup.SetActive(false);
+            inputTextEnglish.text = "";
+            inputTextSinhala.text = "";
+        }
+        else
+        {
+            TypingInputPopup.SetActive(true);
+        }
+
+        if (lnaguage == "sinhala")
+        {
+            processingMode = "sinhala";
+            sinhalaSingView.SetActive(true);
+            inputTextSinhala.gameObject.SetActive(true);
+            inputTextEnglish.gameObject.SetActive(false);
+        }
+        else
+        {
+            processingMode = "english";
+            sinhalaSingView.SetActive(false);
+            inputTextEnglish.gameObject.SetActive(true);
+            inputTextSinhala.gameObject.SetActive(false);
+        }
+
     }
         
     public void okType()
     {
         TypingInputPopup.SetActive(false);
-        StartCoroutine(getData());
+
+        if(processingMode != "english")
+        {
+            StartCoroutine(getSinhalaData(inputTextSinhala.text));
+        }
+        else
+        {
+            StartCoroutine(getEnglishData(inputTextEnglish.text));
+        }
+
+        inputTextEnglish.text = "";
+        inputTextSinhala.text = "";
     }
 
     public void LoadFile()
@@ -151,34 +209,20 @@ public class ControlPanel : MonoBehaviour
             {
                 FilePath = path;
                 Debug.Log("path is "+path);
+                sendVideo(path);
             }
         },new string[] { FileType});
     }
 
-    #region API call
-    IEnumerator getData()
-    {/*
-        using(UnityWebRequest request = UnityWebRequest.Get(URL))
-        {
-            yield return request.SendWebRequest();
+    #region API call sinhala
+    IEnumerator getSinhalaData(string sentence)
+    {
+        Debug.Log("sentence is " + sentence);
 
-            if(request.result == UnityWebRequest.Result.ConnectionError)
-            {
-                debugLog.text = "Error = " + request.error;
-            }
-            else
-            {
-                string json = request.downloadHandler.text;
-            //    SimpleJSON.JSONNode stats = SimpleJSON.JSON.Parse(json);
-
-              //  debugLog.text = " result " + stats[0]["result"];
-            }
-        }*/
-
-        string jsonPayload = "{\"sentence\":\"mother come\"}";
+        string jsonPayload = "{\"sentence\":\" " + sentence + " \"}";
 
 
-        using (UnityWebRequest request = new UnityWebRequest(URL, "POST"))
+        using (UnityWebRequest request = new UnityWebRequest(URL+ "/predict/sl", "POST"))
         {
             byte[] jsonBytes = System.Text.Encoding.UTF8.GetBytes(jsonPayload);
             request.uploadHandler = new UploadHandlerRaw(jsonBytes);
@@ -193,26 +237,183 @@ public class ControlPanel : MonoBehaviour
             }
             else
             {
-                string json = request.downloadHandler.text;
-                SimpleJSON.JSONNode stats = SimpleJSON.JSON.Parse(json);
-                Debug.Log("stats " + json);
-                Debug.Log("json " + json);
-                Dictionary<string, List<string>> data = JsonUtility.FromJson<Dictionary<string, List<string>>>(json);
-                Debug.Log("1 " + data);
-            /*
-                    string[] resultArray = stats["result"];
-                    Debug.Log("2 " + resultValues);
-                    // Convert list to array if needed
-                    //string[] resultArray = resultValues.ToArray();
-                    Debug.Log("3 " + resultArray);
-                    // Now you can use the values in resultArray
-                    foreach (string value in resultArray)
-                    {
-                        Debug.Log("Value: " + value);
-                    }*/
-             }
+                string jsonString = request.downloadHandler.text;
+          
+                Debug.Log("json " + jsonString);
+                JSONData data = JsonUtility.FromJson<JSONData>(jsonString);
+
+                sinhalaSingView.GetComponent<SinhalaSign>().showSinhalaSign(data.result);
+
+            }
             
         }
     }
     #endregion
+
+
+    #region API call English
+    IEnumerator getEnglishData(string sentence)
+    {
+        Debug.Log("sentence is " + sentence);
+
+        string jsonPayload = "{\"sentence\":\" " + sentence + " \"}";
+
+
+        using (UnityWebRequest request = new UnityWebRequest(URL + "/predict/en", "POST"))
+        {
+            byte[] jsonBytes = System.Text.Encoding.UTF8.GetBytes(jsonPayload);
+            request.uploadHandler = new UploadHandlerRaw(jsonBytes);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.ConnectionError)
+            {
+                debugLog.text = "Error = " + request.error;
+            }
+            else
+            {
+                string jsonString = request.downloadHandler.text;
+
+                Debug.Log("json " + jsonString);
+                JSONData data = JsonUtility.FromJson<JSONData>(jsonString);
+
+                StartCoroutine(playAnimation(data.result));
+
+            }
+
+        }
+    }
+    #endregion
+
+    #region play Animation
+    IEnumerator playAnimation(string[] result)
+    {
+        float delayBetweenIterations = 2.0f;
+
+        foreach (string value in result)
+        {
+            string animation = value.Replace(".gif", "").Replace(",gif", "").Replace("'", "").Replace(" ", "_").ToLower();
+
+            Debug.Log("Performing animation-> " + animation);
+            if (mAnimator != null)
+            {
+                mAnimator.SetTrigger(animation);
+            }
+            else
+            {
+                Debug.Log("mAnimator null");
+            }
+            // Wait for the specified delay before continuing to the next iteration
+            yield return new WaitForSeconds(delayBetweenIterations);
+        }
+
+        if (mAnimator != null)
+        {
+            mAnimator.SetTrigger("TrIdeal");
+        }
+        else
+        {
+            Debug.Log("mAnimator null");
+        }
+
+    }
+    #endregion
+
+    public void sendVideo(string filePath)
+    {
+        showTextInPopup("Processing....");
+        StartCoroutine(UploadCoroutine(filePath));
+    } 
+    
+    public void sendFrames(string[] framPaths)
+    {
+        showTextInPopup("Processing....");
+        StartCoroutine(UploadFramesCoroutine(framPaths));
+    }
+
+  
+    /* Upload the chosen video file to the movie server */
+    [Obsolete]
+    IEnumerator UploadCoroutine(string filePath)
+    {
+        WWWForm form = new WWWForm();
+        form.AddBinaryData("files", File.ReadAllBytes(filePath));
+        UnityWebRequest www = UnityWebRequest.Post(URL + "/predict/video", form);
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            string jsonString = www.downloadHandler.text;
+            Debug.Log("Form upload complete! " + jsonString);
+            JSONDataVideo data = JsonUtility.FromJson<JSONDataVideo>(jsonString);
+            showTextInPopup(data.result);
+        }
+    }
+
+
+    /* Upload frames */
+    [Obsolete]
+    IEnumerator UploadFramesCoroutine(string[] framePaths)
+    {
+        WWWForm form = new WWWForm();
+       // form.AddBinaryData("files", File.ReadAllBytes(framPaths[0]));
+
+        foreach (string framePath in framePaths)
+        {
+            byte[] frameData = File.ReadAllBytes(framePath);
+            form.AddBinaryData("files", frameData, Path.GetFileName(framePath));
+        }
+
+        UnityWebRequest www = UnityWebRequest.Post(URL + "/predict/frames", form);
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            string jsonString = www.downloadHandler.text;
+            Debug.Log("Form upload complete! " + jsonString);
+            JSONDataVideo data = JsonUtility.FromJson<JSONDataVideo>(jsonString);
+            showTextInPopup(data.result);
+        }
+    }
+
+    public void showTextInPopup(string value)
+    {
+        ShowTextPopup.SetActive(true);
+        ShowTextPopupText.text = value;
+    }
+
+    public void hideTextInPopup()
+    {
+        ShowTextPopup.SetActive(false);
+        ShowTextPopupText.text = "";
+    }
+
+    public void openSettings()
+    {
+        SettingsPopup.SetActive(true);
+
+        urlText.text = URL;
+
+    }
+    public void closeSettings()
+    {
+        SettingsPopup.SetActive(false);
+    }
+    
+    public void saveSettings()
+    {
+        SettingsPopup.SetActive(false);
+
+        URL = urlText.text ;
+    }
 }
